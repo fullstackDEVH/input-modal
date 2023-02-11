@@ -118,6 +118,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     render(currentIndex);
                 }    
                 if( e.keyCode === codeSubmit && e.altKey ) {
+                    api[currentIndex].value = inputText.value
+                    let check = false;
+
+                    api.forEach(item => {
+                        if(item.value.length < 1 ){
+                            check = true;
+                            console.log(check);
+
+                            return;
+                        }
+                    })
+
+                    if(check) {
+                        alert('missing text somewhere')
+                        inputText.focus();
+                        return;
+                    }
                     
                     if( currentIndex === api.length - 1 ) {
                         if(inputText.value.length < 1) {

@@ -2,29 +2,6 @@
 
 export const bar = [
     {
-        name : 'Shortcut',
-        items : [
-            {
-                name_item : 'next',
-                keyCodeName : "alt + Enter",
-                keyCode : 13,
-               
-            },
-            {
-                name_item : 'pre',
-                keyCodeName : "alt + z",
-                keyCode : 90,
-                
-            },
-            {
-                name_item : 'submit',
-                keyCodeName : "alt + q",
-                keyCode : 81,
-                
-            }
-        ]
-    },
-    {
         name : 'Device',
         items : [
             {
@@ -44,7 +21,30 @@ export const bar = [
             
             }
         ]
-    }
+    },
+    {
+        name : 'Shortcut',
+        items : [
+            {
+                name_item : 'next',
+                keyCodeName : "alt + enter",
+                keyCode : 13,
+               
+            },
+            {
+                name_item : 'pre',
+                keyCodeName : "alt + z",
+                keyCode : 90,
+                
+            },
+            {
+                name_item : 'submit',
+                keyCodeName : "alt + q",
+                keyCode : 81,
+                
+            }
+        ]
+    },
 ]
 
 export default [

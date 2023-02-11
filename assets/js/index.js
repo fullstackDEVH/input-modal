@@ -56,9 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    btn_submit.onclick = (e) => {
+    const handleSubmit = () => {
         api[currentIndex].value = inputText.value
         console.log(api);
+    }
+
+    btn_submit.onclick = (e) => {
+        handleSubmit()
     };
 
     var a;
@@ -85,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.onkeydown = (e) => {   
         let codeNext = bar[0].items[0].keyCode;
         let codePre = bar[0].items[1].keyCode;
+        let codeSubmit = bar[0].items[2].keyCode;
 
         // console.log("so sánh với key được lưu trong bars");
         if(!isModal) {
@@ -112,6 +117,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     currentIndex--; 
                     render(currentIndex);
                 }    
+                if( e.keyCode === codeSubmit && e.altKey ) {
+                    
+                    if( currentIndex === api.length - 1 ) {
+                        if(inputText.value.length < 1) {
+                        alert('missing text somewhere')
+                        inputText.focus();
+                        return;
+                        }
+                        
+                    }
+                    handleSubmit()
+                }
             }else {
                 if(isEditShortCut.isEdit) {
                     inputEdit = e.key;
@@ -129,36 +146,37 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal_sett__contr = $(".modal_sett__contr");
 
     modal_sett.onclick = (e) => {
-        /*if(e.target.closest(".child__icon")) {
-            
-            e.target.closest(".child").onkeydown = (e) => {
-                console.log(e);
-            }
-        }*/
-
+        
+        // select navbar setting
         if(e.target.closest(".bar_item")) {
             renderModal(e.target.closest(".bar_item").getAttribute("data-nav"))
         }
 
+        // btn close modal
         if(e.target.closest(".contr__item__heading_close")) {
             modal.classList.remove("show")
             isModal = false;
         }
 
+        // click
         if(e.target.closest(".child__icon:not(.child__icon.save)")) {
             isEditShortCut.isEdit = true;
             inputEdit = "";
 
             $$(".child").forEach((e)=> {
-                e.classList.remove("edit")
+                e.classList.remove("edit");
             })
 
             $$(".child__icon").forEach((e)=> {
-                if(e.classList.contains(".child__icon.save")){
-                    console.log("change icon");
-                    e.innerHTML = `<i class="fa-sharp fa-solid fa-delete-left"></i>`
-                }
-                e.classList.remove("save")
+                
+            if(e.classList.contains('save')) {
+                e.innerHTML = `<i class="fa-solid fa-pen"></i>`
+            }
+            })
+
+            $$(".child__icon").forEach((e)=> {
+                
+                e.classList.remove("save");
 
             })
             e.target.closest(".child__icon").parentElement.classList.add("edit")
@@ -167,9 +185,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // chỉ nên lấy 2 key board
             inputEdit="";
-
         }
-        if(e.target.closest(".child__icon.save")){
+        
+        // save shortcut
+        if(e.target.closest(".child.edit")){
             let nav_shortcut_name = $(".contr__item").getAttribute("data-nav-shortcut-name");
             let nav_shortcut_index = $(".contr__item").getAttribute("data-nav-shortcut-index");
             let indexRemote = e.target.closest(".child").getAttribute("data-index");
@@ -185,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
            
             
             isEditShortCut.isEdit = false;
-            bar[nav_shortcut_index].items[indexRemote].keyCodeName = "alt + " +  inputEdit;
+            bar[nav_shortcut_index].items[indexRemote].keyCodeName = "alt + " +  inputEdit.toLowerCase();
             bar[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
 
 
@@ -194,20 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             inputEdit="";
         }       
-
-        
-        if(e.target.closest(".child__shortcut_btns input")){
-            e.target.closest(".child__shortcut_btns input").onkeydown = (e)=>{
-               
-                
-                // inputEdit= e.key;
-                
-            }
-        }
     };
-    var c;
-    // render
-
+   
     const renderModal = (nav_item = "Shortcut") => {
         let bars = bar.map((nav, i) => (
             `             
@@ -221,8 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `   
                 ${
                     item.name === nav_item ? (
-                        `
-                           
+                        `                
                                 <div class="contr__item" data-nav-shortcut-name=${item.name} data-nav-shortcut-index=${ind}>
                                     <div class="contr__item__heading">
                                         ${item.name}   
@@ -243,11 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                                                 ${e.name_item}
                                                             </div>
                                                             <div class="child__shortcut_btns">
-
-                                                           
-
-                                                                <div class = "shortcut_names">${e.keyCodeName} </div>
-                                                            
+                                                                <div class = "shortcut_names">${e.keyCodeName} </div>                                               
                                                             </div>
                                                             <div class="child__icon">
                                                                 <i class="fa-solid fa-pen"></i>
@@ -270,8 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
         ))
         modal_sett__bar_contain.innerHTML = bars.join("");
         modal_sett__contr.innerHTML = controll_remote.join("")
-        c= $$(".child__shortcut_btns input")
     };
+
     renderModal()
     render(currentIndex);
 });

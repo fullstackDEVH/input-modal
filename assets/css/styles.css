@@ -196,7 +196,7 @@ button {
     
 }
 
-.bar_item:first-child {
+.bar_item.active {
     background-color: #534d4d;
     border-color: white;
     color: #dbd8d8;
@@ -259,6 +259,11 @@ button {
     background-color: #534d4d;
 }
 
+.child.edit {
+    background-color: #534d4d;
+
+}
+
 .child__name {
     padding: 0.2rem 0.4rem;
     font-size: 1.2rem;
@@ -273,13 +278,13 @@ button {
     gap : 1rem;
 }
 
-.child__shortcut_btns input {
+/*.child__shortcut_btns select {
     display: none;
 }
 
-.child.edit .child__shortcut_btns input {
+.child.edit .child__shortcut_btns select {
     display: block;
-}
+}*/
 
 .child__icon {
     position: absolute;

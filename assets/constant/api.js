@@ -6,18 +6,21 @@ export const bar = [
         items : [
             {
                 name_item : 'next',
-                keyCodeName : "enter",
-                keyCode : [13]
+                keyCodeName : "alt + Enter",
+                keyCode : 13,
+               
             },
             {
                 name_item : 'pre',
-                keyCodeName : "enter",
-                keyCode : ['alt', 90]
+                keyCodeName : "alt + z",
+                keyCode : 90,
+                
             },
             {
                 name_item : 'submit',
-                keyCodeName : "enter",
-                keyCode : [50]
+                keyCodeName : "alt + q",
+                keyCode : 81,
+                
             }
         ]
     },
@@ -25,10 +28,9 @@ export const bar = [
         name : 'Device',
         items : [
             {
-                name_item : 'next',
-                keyCodeName : "",
-                keyCode : ['alt', 90]
-
+                name_item : 'PX',
+                keyCodeName : "alt + >",
+                keyCode : 190,
             }
         ]
     },
@@ -36,10 +38,10 @@ export const bar = [
         name : 'Workspace',
         items : [
             {
-                name_item : 'next',
-                keyCodeName : "",
-                keyCode : ['alt', 90]
-
+                name_item : 'random',
+                keyCodeName : "alt + <",
+                keyCode : 188
+            
             }
         ]
     }

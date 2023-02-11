@@ -87,9 +87,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // press keyboard
     
     document.onkeydown = (e) => {   
-        let codeNext = bar[0].items[0].keyCode;
-        let codePre = bar[0].items[1].keyCode;
-        let codeSubmit = bar[0].items[2].keyCode;
+        let codeNext = bar[2].items[0].keyCode;
+        let codePre = bar[2].items[1].keyCode;
+        let codeSubmit = bar[2].items[2].keyCode;
 
         // console.log("so sánh với key được lưu trong bars");
         if(!isModal) {
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     render(currentIndex);
                 }    
                 if( e.keyCode === codeSubmit && e.altKey ) {
-                    api[currentIndex].value = inputText.value
+                      api[currentIndex].value = inputText.value
                     let check = false;
 
                     api.forEach(item => {
@@ -150,6 +150,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(isEditShortCut.isEdit) {
                     inputEdit = e.key;
                     codeKeyEdit = e.keyCode;
+                    console.log(inputEdit);
+                    console.log(codeKeyEdit);
+
                 }
             }
 
@@ -232,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }       
     };
    
-    const renderModal = (nav_item = "Shortcut") => {
+    const renderModal = (nav_item = "Device") => {
         let bars = bar.map((nav, i) => (
             `             
                 <div class="bar_item ${nav.name === nav_item ? `active` : ""}" data-nav=${nav.name} >

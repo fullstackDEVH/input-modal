@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .btn {
@@ -12,15 +16,16 @@ body {
   }
   
   .container {
+    display: flex;  
+
     align-items: center;
     justify-content: center;
-  
+
     height: 100vh;
     width: 100%;
   
     transition: all 0.3s ease-in-out;
     visibility: visible;
-    display: flex;  
     opacity: 1;
     /* background-color: #534d4d; */
   }
@@ -78,7 +83,6 @@ body {
     justify-content: center;
 
     cursor: zoom-in;
-    overflow: hidden;
 
   }
   
@@ -102,6 +106,7 @@ body {
   .popup-right-input {
     width: 100%;
     margin-top: 2rem;
+    height: 50%;
   }
   
   .popup-right-input textarea {
@@ -313,5 +318,39 @@ body {
   
   .child:hover .child__icon {
     opacity: 1;
+  }
+
+  @media only screen and (max-width: 1000px) {
+    .container {
+      padding: 1rem 0;
+      height: auto;
+    }
+
+    .popup {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .popup-left {
+      width: 100%;
+      height: 350px;
+
+    }
+
+    .popup-left-img {
+      width: 100%;
+    }
+
+    .popup-right {
+      width: 100%;
+      border-color: transparent;
+      padding-left: 0;
+      gap: 0.4rem;
+    }
+
+    .popup-right-input {
+      margin-top: 0.5rem;
+
+    }
   }
   

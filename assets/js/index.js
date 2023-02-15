@@ -1,258 +1,259 @@
-import api, {bar} from "../constant/api.js";
+import api, { bar } from "../constant/api.js";
+// import { zoomImg } from "./zoom.js";
 // import modal from "./modal.js";
 
-import {aspectRatioImg} from "./computed.js";
-
-
+import { aspectRatioImg } from "./computed.js";
+// data.sourceImg.element.nodeName
 document.addEventListener("DOMContentLoaded", () => {
 
-    const $ = document.querySelector.bind(document);
-    const $$ = document.querySelectorAll.bind(document);
+  const $ = document.querySelector.bind(document);
+  const $$ = document.querySelectorAll.bind(document);
 
-    // dom
-    const btn_next = $("#btn-next");
-    const btn_pre = $("#btn_pre");
-    const btn_submit = $("#btn-submit");
-    const btn_setting = $("#btn-setting");
+  // dom
+  const btn_next = $("#btn-next");
+  const btn_pre = $("#btn_pre");
+  const btn_submit = $("#btn-submit");
+  const btn_setting = $("#btn-setting");
 
-    let inputEdit = ""
+  let inputEdit = "";
 
-    const img_container = $(".popup-left-img");
-    const img = $(".popup-left-img img");
-    const numOfLoad = $(".numOfLoad");
-    const inputText = $(".popup-right-input #text");
+  const img_container = $(".popup-left-img");
+  const img = $(".popup-left-img img");
+  const numOfLoad = $(".numOfLoad");
+  const inputText = $(".popup-right-input #text");
 
-    // constant
-    
-    let codeKeyEdit = 0;
-    let currentIndex = 0;
-    let isEditShortCut = {
-        isEdit : false,
-        index : null
-    };
+  // constant
 
-    let isModal = false;
+  let codeKeyEdit = 0;
+  let currentIndex = 0;
+  let isEditShortCut = {
+    isEdit: false,
+    index: null,
+  };
 
-    const renderCurrentImgAndValue = (index) => {
+  let isModal = false;
 
-        img.src= api[index].src;
-        aspectRatioImg(img , img_container);
-        inputText.value = api[index].value;
-        numOfLoad.innerText = index + 1 +"/10";
-        inputText.focus();
-    };
+  const renderCurrentImgAndValue = (index) => {
+    img.src = api[index].src;
+    aspectRatioImg(img, img_container);
+    inputText.value = api[index].value;
+    numOfLoad.innerText = index + 1 + "/10";
+    inputText.focus();
+  };
 
-    btn_next.onclick  = () => {
-        if(currentIndex < api.length - 1){
-            if( !inputText.value) {
-                alert('please entered for input')
-                return;
-            }
-            currentIndex++;
-            renderCurrentImgAndValue(currentIndex);
+  btn_next.onclick = () => {
+    if (currentIndex < api.length - 1) {
+      if (!inputText.value) {
+        alert("please entered for input");
+        return;
+      }
+      currentIndex++;
+      renderCurrentImgAndValue(currentIndex);
+    }
+  };
+
+  // btn_pre.onclick = (e) => {
+  //     if(currentIndex > 0){
+  //         currentIndex--;
+  //         renderCurrentImgAndValue(currentIndex);
+  //     }
+  // };
+
+  const handleSubmit = () => {
+    api[currentIndex].value = inputText.value;
+    console.log(api);
+  };
+
+  btn_submit.onclick = (e) => {
+    handleSubmit();
+  };
+
+  var a;
+  btn_setting.onclick = (e) => {
+    modal.classList.add("show");
+    isModal = true;
+    // render modal
+    renderSetting();
+
+    a = $$(".child__shortcut_btns input");
+  };
+
+  inputText.oninput = (e) => {
+    if (currentIndex === api.length - 1 && e.target.value) {
+      btn_submit.disabled = false;
+    } else {
+      btn_submit.disabled = true;
+    }
+  };
+
+  // press keyboard
+
+  document.onkeydown = (e) => {
+    console.log(e);
+    let codeNext = bar[2].items[0].keyCode;
+    let codePre = bar[2].items[1].keyCode;
+    let codeSubmit = bar[2].items[2].keyCode;
+
+    // console.log("so sánh với key được lưu trong bars");
+    if (!isModal) {
+      // click next
+      if (e.altKey && e.keyCode === codeNext && currentIndex < api.length - 1) {
+        if (!inputText.value) {
+          alert("please entered ");
+          inputText.focus();
+          return;
         }
-    };
+        api[currentIndex].value = inputText.value;
+        currentIndex++;
+        renderCurrentImgAndValue(currentIndex);
+      }
+      // click previos
 
-    // btn_pre.onclick = (e) => {
-    //     if(currentIndex > 0){
-    //         currentIndex--;
-    //         renderCurrentImgAndValue(currentIndex);
-    //     }
-    // };
+      if (e.keyCode === codePre && e.altKey) {
+        if (currentIndex < 1) {
+          alert("cannot back ");
+          inputText.focus();
+          return;
+        }
+        api[currentIndex].value = inputText.value;
+        currentIndex--;
+        renderCurrentImgAndValue(currentIndex);
+      }
+      if (e.keyCode === codeSubmit && e.altKey) {
+        api[currentIndex].value = inputText.value;
+        let check = false;
 
-    const handleSubmit = () => {
-        api[currentIndex].value = inputText.value
-        console.log(api);
+        api.forEach((item) => {
+          if (item.value.length < 1) {
+            check = true;
+            console.log(check);
+
+            return;
+          }
+        });
+
+        if (check) {
+          alert("missing text somewhere");
+          inputText.focus();
+          return;
+        }
+
+        if (currentIndex === api.length - 1) {
+          if (inputText.value.length < 1) {
+            alert("missing text somewhere");
+            inputText.focus();
+            return;
+          }
+        }
+        handleSubmit();
+      }
+    } else {
+      if (isEditShortCut.isEdit) {
+        inputEdit = e.key;
+        codeKeyEdit = e.keyCode;
+        console.log(inputEdit);
+        console.log(codeKeyEdit);
+      }
+    }
+  };
+
+  const modal = $(".modal");
+  const modal_sett = $(".modal_sett");
+  const modal_sett__bar_contain = $(".modal_sett__bar_contain");
+  const modal_sett__contr = $(".modal_sett__contr");
+
+  modal_sett.onclick = (e) => {
+    // select navbar setting
+    if (e.target.closest(".bar_item")) {
+      renderSetting(e.target.closest(".bar_item").getAttribute("data-nav"));
     }
 
-    btn_submit.onclick = (e) => {
-        handleSubmit()
-    };
-
-    var a;
-    btn_setting.onclick = (e) => {
-        modal.classList.add("show")
-        isModal = true;
-        // render modal
-        renderSetting()   
-
-        a = $$(".child__shortcut_btns input");
-
-    };
-
-    inputText.oninput = (e) => {
-        if(currentIndex === api.length - 1 && e.target.value) {
-            btn_submit.disabled  = false;
-        }else {
-            btn_submit.disabled  = true;
-        }
+    // btn close modal
+    if (e.target.closest(".contr__item__heading_close")) {
+      modal.classList.remove("show");
+      isModal = false;
     }
 
-    // press keyboard
-    
-    document.onkeydown = (e) => {   
-        console.log(e);
-        let codeNext = bar[2].items[0].keyCode;
-        let codePre = bar[2].items[1].keyCode;
-        let codeSubmit = bar[2].items[2].keyCode;
+    // click
+    if (e.target.closest(".child__icon:not(.child__icon.save)")) {
+      isEditShortCut.isEdit = true;
+      inputEdit = "";
 
-        // console.log("so sánh với key được lưu trong bars");
-        if(!isModal) {
+      $$(".child").forEach((e) => {
+        e.classList.remove("edit");
+      });
 
-            // click next
-                if( e.altKey &&e.keyCode === codeNext && currentIndex < api.length - 1 ) {
-                    if( !inputText.value) {
-                        alert('please entered ')
-                        inputText.focus();
-                        return;
-                    }
-                    api[currentIndex].value = inputText.value;
-                    currentIndex++; 
-                    renderCurrentImgAndValue(currentIndex);
-                }
-            // click previos
-
-                if( e.keyCode === codePre && e.altKey ) {
-                    if( currentIndex < 1 ) {
-                        alert('cannot back ')
-                        inputText.focus();
-                        return;
-                    }
-                    api[currentIndex].value = inputText.value;
-                    currentIndex--; 
-                    renderCurrentImgAndValue(currentIndex);
-                }    
-                if( e.keyCode === codeSubmit && e.altKey ) {
-                      api[currentIndex].value = inputText.value
-                    let check = false;
-
-                    api.forEach(item => {
-                        if(item.value.length < 1 ){
-                            check = true;
-                            console.log(check);
-
-                            return;
-                        }
-                    })
-
-                    if(check) {
-                        alert('missing text somewhere')
-                        inputText.focus();
-                        return;
-                    }
-                    
-                    if( currentIndex === api.length - 1 ) {
-                        if(inputText.value.length < 1) {
-                        alert('missing text somewhere')
-                        inputText.focus();
-                        return;
-                        }
-                        
-                    }
-                    handleSubmit()
-                }
-            }else {
-                if(isEditShortCut.isEdit) {
-                    inputEdit = e.key;
-                    codeKeyEdit = e.keyCode;
-                    console.log(inputEdit);
-                    console.log(codeKeyEdit);
-
-                }
-            }
-
-    
-    };
-
-
-    const modal = $(".modal");
-    const modal_sett = $(".modal_sett");
-    const modal_sett__bar_contain = $(".modal_sett__bar_contain");
-    const modal_sett__contr = $(".modal_sett__contr");
-
-    modal_sett.onclick = (e) => {
-        
-        // select navbar setting
-        if(e.target.closest(".bar_item")) {
-            renderSetting(e.target.closest(".bar_item").getAttribute("data-nav"))
+      $$(".child__icon").forEach((e) => {
+        if (e.classList.contains("save")) {
+          e.innerHTML = `<i class="fa-solid fa-pen"></i>`;
         }
+      });
 
-        // btn close modal
-        if(e.target.closest(".contr__item__heading_close")) {
-            modal.classList.remove("show")
-            isModal = false;
-        }
+      $$(".child__icon").forEach((e) => {
+        e.classList.remove("save");
+      });
+      e.target.closest(".child__icon").parentElement.classList.add("edit");
+      e.target.closest(".child__icon").classList.add("save");
+      e.target.closest(
+        ".child__icon"
+      ).innerHTML = `<i class="fa-solid fa-floppy-disk"></i>`;
 
-        // click
-        if(e.target.closest(".child__icon:not(.child__icon.save)")) {
-            isEditShortCut.isEdit = true;
-            inputEdit = "";
+      // chỉ nên lấy 2 key board
+      inputEdit = "";
+    }
 
-            $$(".child").forEach((e)=> {
-                e.classList.remove("edit");
-            })
+    // save shortcut
+    if (e.target.closest(".child.edit")) {
+      let nav_shortcut_name = $(".contr__item").getAttribute(
+        "data-nav-shortcut-name"
+      );
+      let nav_shortcut_index = $(".contr__item").getAttribute(
+        "data-nav-shortcut-index"
+      );
+      let indexRemote = e.target.closest(".child").getAttribute("data-index");
 
-            $$(".child__icon").forEach((e)=> {
-                
-            if(e.classList.contains('save')) {
-                e.innerHTML = `<i class="fa-solid fa-pen"></i>`
-            }
-            })
+      if (inputEdit.length < 1) {
+        renderSetting(nav_shortcut_name);
+        return;
+      }
+      if (e.target.closest("#cars")) {
+        console.log(e.target.closest("#cars").value);
+      }
+      // khi save nếu có hơn 2 ký tự thì dừng
 
-            $$(".child__icon").forEach((e)=> {
-                
-                e.classList.remove("save");
+      isEditShortCut.isEdit = false;
+      bar[nav_shortcut_index].items[indexRemote].keyCodeName =
+        "alt + " + inputEdit.toLowerCase();
+      bar[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
 
-            })
-            e.target.closest(".child__icon").parentElement.classList.add("edit")
-            e.target.closest(".child__icon").classList.add("save");
-            e.target.closest(".child__icon").innerHTML =  `<i class="fa-solid fa-floppy-disk"></i>`;
+      console.log(inputEdit);
+      renderSetting(nav_shortcut_name);
 
-            // chỉ nên lấy 2 key board
-            inputEdit="";
-        }
-        
-        // save shortcut
-        if(e.target.closest(".child.edit")){
-            let nav_shortcut_name = $(".contr__item").getAttribute("data-nav-shortcut-name");
-            let nav_shortcut_index = $(".contr__item").getAttribute("data-nav-shortcut-index");
-            let indexRemote = e.target.closest(".child").getAttribute("data-index");
+      inputEdit = "";
+    }
+  };
 
-            if(inputEdit.length <1 ) {
-                renderSetting(nav_shortcut_name);
-                return
-            };
-            if(e.target.closest("#cars")) {
-                console.log(e.target.closest("#cars").value);
-            }
-            // khi save nếu có hơn 2 ký tự thì dừng
-                       
-            isEditShortCut.isEdit = false;
-            bar[nav_shortcut_index].items[indexRemote].keyCodeName = "alt + " +  inputEdit.toLowerCase();
-            bar[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
-
-            console.log(inputEdit);
-            renderSetting(nav_shortcut_name);
-
-            inputEdit="";
-        }       
-    };
-   
-    const renderSetting = (nav_item = "Device") => {
-        let bars = bar.map((nav, i) => (
-            `             
-                <div class="bar_item ${nav.name === nav_item ? `active` : ""}" data-nav=${nav.name} >
+  const renderSetting = (nav_item = "Device") => {
+    let bars = bar.map(
+      (nav, i) =>
+        `             
+                <div class="bar_item ${
+                  nav.name === nav_item ? `active` : ""
+                }" data-nav=${nav.name} >
                     ${nav.name}   
                 </div>           
             `
-        ))
+    );
 
-        let controll_remote = bar.map((item, ind) => (
-            `   
+    let controll_remote = bar.map(
+      (item, ind) =>
+        `   
                 ${
-                    item.name === nav_item ? (
-                        `                
-                                <div class="contr__item" data-nav-shortcut-name=${item.name} data-nav-shortcut-index=${ind}>
+                  item.name === nav_item
+                    ? `                
+                                <div class="contr__item" data-nav-shortcut-name=${
+                                  item.name
+                                } data-nav-shortcut-index=${ind}>
                                     <div class="contr__item__heading">
                                         ${item.name}   
                                         <div class="contr__item__heading_close">
@@ -264,9 +265,9 @@ document.addEventListener("DOMContentLoaded", () => {
             
                                     <div class="contr__item_remote">
                                         <div class="remote__child">
-                                            ${
-                                                item.items.map((e, i)=>(
-                                                    `
+                                            ${item.items.map(
+                                              (e, i) =>
+                                                `
                                                         <div class="child" data-index=${i}>
                                                             <div class="child__name">
                                                                 ${e.name_item}                                                            </div>
@@ -278,25 +279,25 @@ document.addEventListener("DOMContentLoaded", () => {
                                                             </div>
                                                         </div>
                                                     `
-                                                ))
-                                            }
+                                            )}
                                         </div>
                                     </div>
             
                                 </div>
                         
                         `
-                    ) : ""
+                    : ""
                 }
                 
                 
             `
-        ))
-        modal_sett__bar_contain.innerHTML = bars.join("");
-        modal_sett__contr.innerHTML = controll_remote.join("")
-    };
+    );
+    modal_sett__bar_contain.innerHTML = bars.join("");
+    modal_sett__contr.innerHTML = controll_remote.join("");
+  };
 
-    renderSetting()
-    renderCurrentImgAndValue(currentIndex);
+  renderSetting();
+  renderCurrentImgAndValue(currentIndex);
+
+//   zoomImg()
 });
-

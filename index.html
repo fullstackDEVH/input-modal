@@ -1,75 +1,77 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Popup</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel='stylesheet' type='text/css' media='screen' href='assets/css/styles.css'>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="assets/css/styles.css"
+    />
+  </head>
+  <body>
     <div class="container">
-        <div class="popup">
-            <div class="popup-left">
-                <div class="popup-left-img">
-                    <img src="" alt="">
-                </div>
-                <div class="popup-num">
-                    <span class="numOfLoad"></span>
-                </div>
-            </div>
-            <div class="popup-right">
-                <div class="popup-right-input">
-                    <!-- <input type="text" /> -->
-                    <textarea name="" id="text" rows="15" ></textarea>
-                </div>
-                <div class="popup-right-controll">
-                    <button class="btn" id="btn-next">Next</button>
-                    <button class="btn" id="btn-submit" disabled="true">Submit</button>
-                    <button class="btn" id="btn-setting">
-                        <span>
-                            <i class="fa-sharp fa-solid fa-gear"></i>
-                        </span>
-                    </button> 
-                </div>
-            </div>       
-
-
-            <div class="modal">
-                <div class="modal_sett">
-                    <div class="modal_sett__bar">
-                        <div class="modal_sett__bar_headding">
-                            Setting
-                        </div>
-                        <div class="modal_sett__bar_contain">
-
-                        </div>
-                    </div>
-
-                    <div class="modal_sett__contr">
-                        <div class="contr__item">
-                          
-                            <div class="contr__item__heading">
-                                Shortcuts
-                                <div class="contr__item__heading_close">
-                                    <i class="fa-sharp fa-solid fa-delete-left"></i>
-                                </div>
-                            </div>
-
-                            <div class="contr__item_remote">
-                                <div class="remote__child">
-                                   
-                                   
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div> 
-                </div>
-            </div>
+      <div class="popup">
+        <div class="popup-left">
+          <div class="popup-left-img">
+            <img src="https://images.unsplash.com/photo-1676444299854-03047f5e9ebc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+          </div>
+          <div class="popup-num">
+            <span class="numOfLoad"></span>
+          </div>
         </div>
+        <div class="popup-right">
+          <div class="popup-right-input">
+            <!-- <input type="text" /> -->
+            <textarea name="" id="text"></textarea>
+          </div>
+          <div class="popup-right-controll">
+            <button class="btn" id="btn-next">Next</button>
+            <button class="btn" id="btn-submit" disabled="true">Submit</button>
+            <button class="btn" id="btn-setting">
+              <span>
+                <i class="fa-sharp fa-solid fa-gear"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal">
+          <div class="modal_sett">
+            <div class="modal_sett__bar">
+              <div class="modal_sett__bar_headding">Setting</div>
+              <div class="modal_sett__bar_contain"></div>
+            </div>
+
+            <div class="modal_sett__contr">
+              <div class="contr__item">
+                <div class="contr__item__heading">
+                  Shortcuts
+                  <div class="contr__item__heading_close">
+                    <i class="fa-sharp fa-solid fa-delete-left"></i>
+                  </div>
+                </div>
+
+                <div class="contr__item_remote">
+                  <div class="remote__child"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <script type="module" src='./assets/js/index.js'></script>
-</body>
+    <script type="module" src="./assets/js/index.js"></script>
+  </body>
 </html>

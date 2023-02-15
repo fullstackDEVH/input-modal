@@ -1,6 +1,8 @@
 import api, {bar} from "../constant/api.js";
 // import modal from "./modal.js";
 
+import {aspectRatioImg} from "./computed.js";
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -15,9 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let inputEdit = ""
 
+    const img_container = $(".popup-left-img");
     const img = $(".popup-left-img img");
     const numOfLoad = $(".numOfLoad");
-    const inputText = $(".popup-right-input input");
+    const inputText = $(".popup-right-input #text");
 
     // constant
     
@@ -30,9 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let isModal = false;
 
-    const render = (index) => {
+    const renderCurrentImgAndValue = (index) => {
 
         img.src= api[index].src;
+        aspectRatioImg(img , img_container);
         inputText.value = api[index].value;
         numOfLoad.innerText = index + 1 +"/10";
         inputText.focus();
@@ -45,16 +49,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             currentIndex++;
-            render(currentIndex);
+            renderCurrentImgAndValue(currentIndex);
         }
     };
 
-    btn_pre.onclick = (e) => {
-        if(currentIndex > 0){
-            currentIndex--;
-            render(currentIndex);
-        }
-    };
+    // btn_pre.onclick = (e) => {
+    //     if(currentIndex > 0){
+    //         currentIndex--;
+    //         renderCurrentImgAndValue(currentIndex);
+    //     }
+    // };
 
     const handleSubmit = () => {
         api[currentIndex].value = inputText.value
@@ -70,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.classList.add("show")
         isModal = true;
         // render modal
-        renderModal()   
+        renderSetting()   
 
         a = $$(".child__shortcut_btns input");
 
@@ -87,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // press keyboard
     
     document.onkeydown = (e) => {   
+        console.log(e);
         let codeNext = bar[2].items[0].keyCode;
         let codePre = bar[2].items[1].keyCode;
         let codeSubmit = bar[2].items[2].keyCode;
@@ -103,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     api[currentIndex].value = inputText.value;
                     currentIndex++; 
-                    render(currentIndex);
+                    renderCurrentImgAndValue(currentIndex);
                 }
             // click previos
 
@@ -115,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     api[currentIndex].value = inputText.value;
                     currentIndex--; 
-                    render(currentIndex);
+                    renderCurrentImgAndValue(currentIndex);
                 }    
                 if( e.keyCode === codeSubmit && e.altKey ) {
                       api[currentIndex].value = inputText.value
@@ -169,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // select navbar setting
         if(e.target.closest(".bar_item")) {
-            renderModal(e.target.closest(".bar_item").getAttribute("data-nav"))
+            renderSetting(e.target.closest(".bar_item").getAttribute("data-nav"))
         }
 
         // btn close modal
@@ -214,28 +219,26 @@ document.addEventListener("DOMContentLoaded", () => {
             let indexRemote = e.target.closest(".child").getAttribute("data-index");
 
             if(inputEdit.length <1 ) {
-                renderModal(nav_shortcut_name);
+                renderSetting(nav_shortcut_name);
                 return
             };
             if(e.target.closest("#cars")) {
                 console.log(e.target.closest("#cars").value);
             }
             // khi save nếu có hơn 2 ký tự thì dừng
-           
-            
+                       
             isEditShortCut.isEdit = false;
             bar[nav_shortcut_index].items[indexRemote].keyCodeName = "alt + " +  inputEdit.toLowerCase();
             bar[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
 
-
             console.log(inputEdit);
-            renderModal(nav_shortcut_name);
+            renderSetting(nav_shortcut_name);
 
             inputEdit="";
         }       
     };
    
-    const renderModal = (nav_item = "Device") => {
+    const renderSetting = (nav_item = "Device") => {
         let bars = bar.map((nav, i) => (
             `             
                 <div class="bar_item ${nav.name === nav_item ? `active` : ""}" data-nav=${nav.name} >
@@ -266,8 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                                     `
                                                         <div class="child" data-index=${i}>
                                                             <div class="child__name">
-                                                                ${e.name_item}
-                                                            </div>
+                                                                ${e.name_item}                                                            </div>
                                                             <div class="child__shortcut_btns">
                                                                 <div class = "shortcut_names">${e.keyCodeName} </div>                                               
                                                             </div>
@@ -294,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modal_sett__contr.innerHTML = controll_remote.join("")
     };
 
-    renderModal()
-    render(currentIndex);
+    renderSetting()
+    renderCurrentImgAndValue(currentIndex);
 });
 

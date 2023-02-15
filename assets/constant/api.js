@@ -1,6 +1,6 @@
 
 
-export const bar = [
+export const shortcuts = [
     {
         name : 'Device',
         items : [

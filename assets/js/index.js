@@ -1,85 +1,83 @@
-import api, { bar } from "../constant/api.js";
+import api, { shortcuts } from "../constant/api.js";
 // import { zoomImg } from "./zoom.js";
 // import modal from "./modal.js";
+// import {getAllImgs} from "./fetchApi.js"
 
-import { aspectRatioImg } from "./computed.js";
+import { renderCurrentImgAndValue } from "./render.js";
+
 // data.sourceImg.element.nodeName
 document.addEventListener("DOMContentLoaded", () => {
-
   const $ = document.querySelector.bind(document);
   const $$ = document.querySelectorAll.bind(document);
 
   // dom
+  const container = $(".container");
   const btn_next = $("#btn-next");
-  const btn_pre = $("#btn_pre");
+  const btn_pre = $("#btn-previos");
   const btn_submit = $("#btn-submit");
   const btn_setting = $("#btn-setting");
 
-  let inputEdit = "";
-
-  const img_container = $(".popup-left-img");
-  const img = $(".popup-left-img img");
-  const numOfLoad = $(".numOfLoad");
   const inputText = $(".popup-right-input #text");
+  const loading = $(".loading");
 
   // constant
-
+  let inputEdit = "";
   let codeKeyEdit = 0;
   let currentIndex = 0;
   let isEditShortCut = {
     isEdit: false,
     index: null,
   };
+  let dataCallApi = [];
 
   let isModal = false;
 
-  const renderCurrentImgAndValue = (index) => {
-    img.src = api[index].src;
-    aspectRatioImg(img, img_container);
-    inputText.value = api[index].value;
-    numOfLoad.innerText = index + 1 + "/10";
-    inputText.focus();
-  };
-
   btn_next.onclick = () => {
-    if (currentIndex < api.length - 1) {
+    if (currentIndex < dataCallApi.length - 1) {
       if (!inputText.value) {
         alert("please entered for input");
         return;
       }
       currentIndex++;
+
+      if(currentIndex === 3) {
+        dataCallApi = [...dataCallApi,]
+      }
+      renderCurrentImgAndValue(currentIndex, dataCallApi);
+    }
+  };
+
+  btn_pre.onclick = (e) => {
+    if (currentIndex > 0) {
+      currentIndex--;
       renderCurrentImgAndValue(currentIndex);
     }
   };
 
-  // btn_pre.onclick = (e) => {
-  //     if(currentIndex > 0){
-  //         currentIndex--;
-  //         renderCurrentImgAndValue(currentIndex);
-  //     }
-  // };
-
   const handleSubmit = () => {
-    api[currentIndex].value = inputText.value;
-    console.log(api);
+    dataCallApi[currentIndex].value = inputText.value;
+    console.log(dataCallApi);
   };
 
   btn_submit.onclick = (e) => {
     handleSubmit();
   };
 
-  var a;
   btn_setting.onclick = (e) => {
     modal.classList.add("show");
     isModal = true;
     // render modal
     renderSetting();
-
-    a = $$(".child__shortcut_btns input");
   };
 
   inputText.oninput = (e) => {
-    if (currentIndex === api.length - 1 && e.target.value) {
+    if (currentIndex < 0) {
+      btn_pre.disabled = true;
+    } else {
+      btn_pre.disabled = false;
+    }
+
+    if (currentIndex === dataCallApi.length - 1 && e.target.value) {
       btn_submit.disabled = false;
     } else {
       btn_submit.disabled = true;
@@ -89,23 +87,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // press keyboard
 
   document.onkeydown = (e) => {
-    console.log(e);
-    let codeNext = bar[2].items[0].keyCode;
-    let codePre = bar[2].items[1].keyCode;
-    let codeSubmit = bar[2].items[2].keyCode;
+    let codeNext = shortcuts[2].items[0].keyCode;
+    let codePre = shortcuts[2].items[1].keyCode;
+    let codeSubmit = shortcuts[2].items[2].keyCode;
 
     // console.log("so sánh với key được lưu trong bars");
     if (!isModal) {
       // click next
-      if (e.altKey && e.keyCode === codeNext && currentIndex < api.length - 1) {
+      if (
+        e.altKey &&
+        e.keyCode === codeNext &&
+        currentIndex < dataCallApi.length - 1
+      ) {
         if (!inputText.value) {
           alert("please entered ");
           inputText.focus();
           return;
         }
-        api[currentIndex].value = inputText.value;
+        dataCallApi[currentIndex].value = inputText.value;
         currentIndex++;
-        renderCurrentImgAndValue(currentIndex);
+        renderCurrentImgAndValue(currentIndex, dataCallApi);
       }
       // click previos
 
@@ -115,15 +116,15 @@ document.addEventListener("DOMContentLoaded", () => {
           inputText.focus();
           return;
         }
-        api[currentIndex].value = inputText.value;
+        dataCallApi[currentIndex].value = inputText.value;
         currentIndex--;
-        renderCurrentImgAndValue(currentIndex);
+        renderCurrentImgAndValue(currentIndex, dataCallApi);
       }
       if (e.keyCode === codeSubmit && e.altKey) {
-        api[currentIndex].value = inputText.value;
+        dataCallApi[currentIndex].value = inputText.value;
         let check = false;
 
-        api.forEach((item) => {
+        dataCallApi.forEach((item) => {
           if (item.value.length < 1) {
             check = true;
             console.log(check);
@@ -138,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        if (currentIndex === api.length - 1) {
+        if (currentIndex === dataCallApi.length - 1) {
           if (inputText.value.length < 1) {
             alert("missing text somewhere");
             inputText.focus();
@@ -222,9 +223,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // khi save nếu có hơn 2 ký tự thì dừng
 
       isEditShortCut.isEdit = false;
-      bar[nav_shortcut_index].items[indexRemote].keyCodeName =
+      shortcuts[nav_shortcut_index].items[indexRemote].keyCodeName =
         "alt + " + inputEdit.toLowerCase();
-      bar[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
+      shortcuts[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
 
       console.log(inputEdit);
       renderSetting(nav_shortcut_name);
@@ -234,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const renderSetting = (nav_item = "Device") => {
-    let bars = bar.map(
+    let bars = shortcuts.map(
       (nav, i) =>
         `             
                 <div class="bar_item ${
@@ -245,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `
     );
 
-    let controll_remote = bar.map(
+    let controll_remote = shortcuts.map(
       (item, ind) =>
         `   
                 ${
@@ -297,7 +298,41 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   renderSetting();
-  renderCurrentImgAndValue(currentIndex);
 
-//   zoomImg()
+  //   zoomImg()
+
+  let getAllImgs = async () => {
+    let url = "https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs";
+
+    try {
+      let res = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      return res.json();
+    } catch (error) {
+      return error;
+    }
+  };
+
+
+  loading.innerText = "loading.....";
+  getAllImgs()
+    .then((data) => {
+      return data;
+    })
+    .then((data) => {
+      loading.innerText = "";
+      container.classList.add("show");
+      dataCallApi = data;
+      renderCurrentImgAndValue(currentIndex, data);
+    })
+    .catch((err) => {
+      loading.innerText = "loading.....";
+      console.log("err : ", err);
+    });
+
+  // console.log(arr);
 });

@@ -9,7 +9,7 @@ const inputText = $(".popup-right-input #text");
 const img_container = $(".popup-left-img");
 
 export const renderCurrentImgAndValue = (index, dataCall) => {
-  img.src = dataCall[index].urlImg;
+  img.src = dataCall[index]?.urlImg || "";
   aspectRatioImg(img, img_container);
   inputText.value = dataCall[index].value;
   numOfLoad.innerText = index + 1 + "/" + dataCall.length;

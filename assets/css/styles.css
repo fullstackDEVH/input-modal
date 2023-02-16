@@ -7,13 +7,6 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-.loading {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .btn {
   padding: 0.3rem 0.5rem;
   font-size: 1rem;
@@ -78,7 +71,7 @@ body {
   display: block;
   position: absolute;
   top: -2%;
-  right: -6%;
+  right: -7%;
 }
 
 .popup-left-img {
@@ -325,6 +318,65 @@ body {
 
 .child:hover .child__icon {
   opacity: 1;
+}
+
+.container-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: scale(0);
+  visibility: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+
+  background: #777474;
+  opacity: 0;
+}
+
+.container-loader.show {
+  opacity: 0.1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.loader {
+  position: absolute;
+  z-index: 1000;
+  border: 16px solid #f3f3f3;
+  background-color: #000;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+
+  -webkit-animation: spin 1s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+
+  transition: all 0.3s ease-in-out;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media only screen and (max-width: 1000px) {

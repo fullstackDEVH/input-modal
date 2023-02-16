@@ -1,6 +1,6 @@
-let url = "https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs";
 
-export let getFetch = () => {
+
+export let getFetch = (url) => {
   try {
     let promise = fetch(url, {
       method: "GET",

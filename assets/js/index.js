@@ -4,6 +4,9 @@ import { getFetch } from "./fetchApi.js";
 import { renderSettingAPI } from "./renderShortcut.js";
 import { renderCurrentImgAndValue } from "./renderImgValue.js";
 
+let url = "https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs";
+let url2 = "https://63ec999932a08117239df65b.mockapi.io/api/v1/imgage";
+
 document.addEventListener("DOMContentLoaded", () => {
   // bind to document
   const $ = document.querySelector.bind(document);
@@ -17,9 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn_setting = $("#btn-setting");
 
   const inputText = $(".popup-right-input #text");
-  const loading = $(".loading");
+  const loading = $(".container-loader");
 
   // define constant
+  let isFetch = false;
+
   let inputEdit = "";
   let codeKeyEdit = 0;
   let currentIndex = 0;
@@ -39,6 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       currentIndex++;
 
+      if (Math.floor(dataCallApi.length / 10) === currentIndex) {
+        getFetch(url).then((data) => {
+          dataCallApi = [...dataCallApi, ...data];
+          renderCurrentImgAndValue(currentIndex, dataCallApi);
+        });
+      }
+
       if (currentIndex === 3) {
         dataCallApi = [...dataCallApi];
       }
@@ -50,7 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
   btn_pre.onclick = (e) => {
     if (currentIndex > 0) {
       currentIndex--;
-      renderCurrentImgAndValue(currentIndex);
+      renderCurrentImgAndValue(currentIndex, dataCallApi);
+    } else {
+      alert("đây là vị trí đầu tiên! Cann't back.");
     }
   };
 
@@ -87,6 +101,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  const handleClickChangeImgAndValue = (indexValueChange) => {
+    dataCallApi[currentIndex].value = inputText.value;
+    currentIndex = +indexValueChange + currentIndex;
+    renderCurrentImgAndValue(currentIndex, dataCallApi);
+  };
+
   // press keyboard
   document.onkeydown = (e) => {
     let codeNext = shortcutSettingData[2].items[0].keyCode;
@@ -106,9 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
           inputText.focus();
           return;
         }
-        dataCallApi[currentIndex].value = inputText.value;
-        currentIndex++;
-        renderCurrentImgAndValue(currentIndex, dataCallApi);
+        handleClickChangeImgAndValue(1);
       }
       // shortcut previous press
       if (e.keyCode === codePre && e.altKey) {
@@ -117,9 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
           inputText.focus();
           return;
         }
-        dataCallApi[currentIndex].value = inputText.value;
-        currentIndex--;
-        renderCurrentImgAndValue(currentIndex, dataCallApi);
+        handleClickChangeImgAndValue(-1);
       }
       if (e.keyCode === codeSubmit && e.altKey) {
         dataCallApi[currentIndex].value = inputText.value;
@@ -166,7 +182,10 @@ document.addEventListener("DOMContentLoaded", () => {
   modal_sett.onclick = (e) => {
     // select navbar setting
     if (e.target.closest(".bar_item")) {
-      renderSettingAPI(e.target.closest(".bar_item").getAttribute("data-nav"), shortcutSettingData);
+      renderSettingAPI(
+        e.target.closest(".bar_item").getAttribute("data-nav"),
+        shortcutSettingData
+      );
     }
 
     // btn close modal
@@ -214,7 +233,6 @@ document.addEventListener("DOMContentLoaded", () => {
       let indexRemote = e.target.closest(".child").getAttribute("data-index");
 
       if (inputEdit.length < 1) {
-        
         renderSettingAPI(nav_shortcut_name, shortcutSettingData);
         return;
       }
@@ -229,84 +247,21 @@ document.addEventListener("DOMContentLoaded", () => {
       shortcutSettingData[nav_shortcut_index].items[indexRemote].keyCode =
         codeKeyEdit;
 
-      console.log(inputEdit);
       renderSettingAPI(nav_shortcut_name, shortcutSettingData);
 
       inputEdit = "";
     }
   };
 
- /* const renderSetting = (nav_item = "Preferences") => {
-    let bars = shortcutSettingData.map(
-      (nav, i) =>
-        `             
-                <div class="bar_item ${
-                  nav.name === nav_item ? `active` : ""
-                }" data-nav=${nav.name} >
-                    ${nav.name}   
-                </div>           
-            `
-    );
+  loading.classList.add("show");
 
-    let controll_remote = shortcutSettingData.map(
-      (item, ind) =>
-        `   
-                ${
-                  item.name === nav_item
-                    ? `                
-                                <div class="contr__item" data-nav-shortcut-name=${
-                                  item.name
-                                } data-nav-shortcut-index=${ind}>
-                                    <div class="contr__item__heading">
-                                        ${item.name}   
-                                        <div class="contr__item__heading_close">
-                                            <i class="fa-sharp fa-solid fa-delete-left"></i>
-                                        </div>
-                                    </div>
-
-                                    <p class="p"></p>
-            
-                                    <div class="contr__item_remote">
-                                        <div class="remote__child">
-                                            ${item.items.map(
-                                              (e, i) =>
-                                                `
-                                                        <div class="child" data-index=${i}>
-                                                            <div class="child__name">
-                                                                ${e.name_item}                                                            </div>
-                                                            <div class="child__shortcut_btns">
-                                                                <div class = "shortcut_names">${e.keyCodeName} </div>                                               
-                                                            </div>
-                                                            <div class="child__icon">
-                                                                <i class="fa-solid fa-pen"></i>
-                                                            </div>
-                                                        </div>
-                                                    `
-                                            )}
-                                        </div>
-                                    </div>
-            
-                                </div>
-                        
-                        `
-                    : ""
-                }
-                
-                
-            `
-    );
-    modal_sett__bar_contain.innerHTML = bars.join("");
-    modal_sett__contr.innerHTML = controll_remote.join("");
-  };*/
-
-  loading.innerText = "loading.....";
-
-  getFetch().then((data) => {
-    loading.innerText = "";
+  getFetch("https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs").then((data) => {
+    // loading.innerText = "";
     container.classList.add("show");
+    loading.classList.remove("show");
+
     dataCallApi = data;
-    renderCurrentImgAndValue(currentIndex, data);
+    renderCurrentImgAndValue(currentIndex, dataCallApi);
     renderSettingAPI("Preferences", shortcutSettingData);
   });
-
 });

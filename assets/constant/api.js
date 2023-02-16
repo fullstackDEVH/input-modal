@@ -1,6 +1,6 @@
 
 
-export const shortcuts = [
+export const shortcutSettingData = [
     {
         name : 'Preferences',
         items : [

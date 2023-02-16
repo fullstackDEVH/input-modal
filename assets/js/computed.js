@@ -26,7 +26,6 @@ export const aspectRatioImg = (image, containerImg) => {
 
 
 
-
 export const aspectRatieqweoImg = (img, containerImg) => {
     var container = document.getElementById("container");
     var image = document.getElementById("image");

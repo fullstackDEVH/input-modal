@@ -1,12 +1,11 @@
-import api, { shortcuts } from "../constant/api.js";
-// import { zoomImg } from "./zoom.js";
-// import modal from "./modal.js";
-import {getFetch} from "./fetchApi.js"
+import api, { shortcutSettingData } from "../constant/api.js";
+import { checkLocalStorageIsAvaiable } from "./localStorage.js";
+import { getFetch } from "./fetchApi.js";
+import { renderSettingAPI } from "./renderShortcut.js";
+import { renderCurrentImgAndValue } from "./renderImgValue.js";
 
-import { renderCurrentImgAndValue } from "./render.js";
-
-// data.sourceImg.element.nodeName
 document.addEventListener("DOMContentLoaded", () => {
+  // bind to document
   const $ = document.querySelector.bind(document);
   const $$ = document.querySelectorAll.bind(document);
 
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputText = $(".popup-right-input #text");
   const loading = $(".loading");
 
-  // constant
+  // define constant
   let inputEdit = "";
   let codeKeyEdit = 0;
   let currentIndex = 0;
@@ -29,9 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
     index: null,
   };
   let dataCallApi = [];
-
   let isModal = false;
 
+  // btn next click
   btn_next.onclick = () => {
     if (currentIndex < dataCallApi.length - 1) {
       if (!inputText.value) {
@@ -40,13 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       currentIndex++;
 
-      if(currentIndex === 3) {
-        dataCallApi = [...dataCallApi,]
+      if (currentIndex === 3) {
+        dataCallApi = [...dataCallApi];
       }
       renderCurrentImgAndValue(currentIndex, dataCallApi);
     }
   };
 
+  // btn previous click
   btn_pre.onclick = (e) => {
     if (currentIndex > 0) {
       currentIndex--;
@@ -54,20 +54,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // func submit
   const handleSubmit = () => {
     dataCallApi[currentIndex].value = inputText.value;
     console.log(dataCallApi);
   };
 
+  // btn submit click
   btn_submit.onclick = (e) => {
     handleSubmit();
   };
 
+  // btn setting click
   btn_setting.onclick = (e) => {
     modal.classList.add("show");
     isModal = true;
     // render modal
-    renderSetting();
+    renderSettingAPI("Preferences", shortcutSettingData);
   };
 
   inputText.oninput = (e) => {
@@ -85,15 +88,14 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // press keyboard
-
   document.onkeydown = (e) => {
-    let codeNext = shortcuts[2].items[0].keyCode;
-    let codePre = shortcuts[2].items[1].keyCode;
-    let codeSubmit = shortcuts[2].items[2].keyCode;
+    let codeNext = shortcutSettingData[2].items[0].keyCode;
+    let codePre = shortcutSettingData[2].items[1].keyCode;
+    let codeSubmit = shortcutSettingData[2].items[2].keyCode;
 
     // console.log("so sánh với key được lưu trong bars");
     if (!isModal) {
-      // click next
+      // shortcut next press
       if (
         e.altKey &&
         e.keyCode === codeNext &&
@@ -108,8 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
         currentIndex++;
         renderCurrentImgAndValue(currentIndex, dataCallApi);
       }
-      // click previos
-
+      // shortcut previous press
       if (e.keyCode === codePre && e.altKey) {
         if (currentIndex < 1) {
           alert("cannot back ");
@@ -124,11 +125,10 @@ document.addEventListener("DOMContentLoaded", () => {
         dataCallApi[currentIndex].value = inputText.value;
         let check = false;
 
+        // check then missing text value some where
         dataCallApi.forEach((item) => {
           if (item.value.length < 1) {
             check = true;
-            console.log(check);
-
             return;
           }
         });
@@ -152,11 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isEditShortCut.isEdit) {
         inputEdit = e.key;
         codeKeyEdit = e.keyCode;
-        console.log(inputEdit);
-        console.log(codeKeyEdit);
       }
     }
   };
+
+  // handle modal
 
   const modal = $(".modal");
   const modal_sett = $(".modal_sett");
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
   modal_sett.onclick = (e) => {
     // select navbar setting
     if (e.target.closest(".bar_item")) {
-      renderSetting(e.target.closest(".bar_item").getAttribute("data-nav"));
+      renderSettingAPI(e.target.closest(".bar_item").getAttribute("data-nav"), shortcutSettingData);
     }
 
     // btn close modal
@@ -214,7 +214,8 @@ document.addEventListener("DOMContentLoaded", () => {
       let indexRemote = e.target.closest(".child").getAttribute("data-index");
 
       if (inputEdit.length < 1) {
-        renderSetting(nav_shortcut_name);
+        
+        renderSettingAPI(nav_shortcut_name, shortcutSettingData);
         return;
       }
       if (e.target.closest("#cars")) {
@@ -223,19 +224,20 @@ document.addEventListener("DOMContentLoaded", () => {
       // khi save nếu có hơn 2 ký tự thì dừng
 
       isEditShortCut.isEdit = false;
-      shortcuts[nav_shortcut_index].items[indexRemote].keyCodeName =
+      shortcutSettingData[nav_shortcut_index].items[indexRemote].keyCodeName =
         "alt + " + inputEdit.toLowerCase();
-      shortcuts[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
+      shortcutSettingData[nav_shortcut_index].items[indexRemote].keyCode =
+        codeKeyEdit;
 
       console.log(inputEdit);
-      renderSetting(nav_shortcut_name);
+      renderSettingAPI(nav_shortcut_name, shortcutSettingData);
 
       inputEdit = "";
     }
   };
 
-  const renderSetting = (nav_item = "Preferences") => {
-    let bars = shortcuts.map(
+ /* const renderSetting = (nav_item = "Preferences") => {
+    let bars = shortcutSettingData.map(
       (nav, i) =>
         `             
                 <div class="bar_item ${
@@ -246,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `
     );
 
-    let controll_remote = shortcuts.map(
+    let controll_remote = shortcutSettingData.map(
       (item, ind) =>
         `   
                 ${
@@ -295,47 +297,16 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     modal_sett__bar_contain.innerHTML = bars.join("");
     modal_sett__contr.innerHTML = controll_remote.join("");
-  };
-
-
-  //   zoomImg()
-
-  let getAllImgs = async () => {
-    let url = "https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs";
-
-    try {
-      let res = await fetch(url, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
-      });
-      return res.json();
-    } catch (error) {
-      return error;
-    }
-  };
-
+  };*/
 
   loading.innerText = "loading.....";
-  getAllImgs()
-    .then((data) => {
-      return data;
-    })
-    .then((data) => {
-      loading.innerText = "";
-      container.classList.add("show");
-      dataCallApi = data;
-      renderCurrentImgAndValue(currentIndex, data);
-    renderSetting();
 
-    })
-    .catch((err) => {
-      loading.innerText = "loading.....";
-      console.log("err : ", err);
-    });
+  getFetch().then((data) => {
+    loading.innerText = "";
+    container.classList.add("show");
+    dataCallApi = data;
+    renderCurrentImgAndValue(currentIndex, data);
+    renderSettingAPI("Preferences", shortcutSettingData);
+  });
 
-    getFetch().then(data => console.log(data))
-
-  // console.log(arr);
 });

@@ -2,11 +2,16 @@
 
 export const shortcuts = [
     {
-        name : 'Device',
+        name : 'Preferences',
         items : [
             {
-                name_item : 'PX',
-                keyCodeName : "alt + >",
+                name_item : 'Language',
+                keyCodeName : "alt + l",
+                keyCode : 190,
+            },
+            {
+                name_item : 'indentation',
+                keyCodeName : "alt + i",
                 keyCode : 190,
             }
         ]
@@ -32,7 +37,7 @@ export const shortcuts = [
                
             },
             {
-                name_item : 'pre',
+                name_item : 'previous',
                 keyCodeName : "alt + z",
                 keyCode : 90,
                 

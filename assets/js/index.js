@@ -1,7 +1,7 @@
 import api, { shortcuts } from "../constant/api.js";
 // import { zoomImg } from "./zoom.js";
 // import modal from "./modal.js";
-// import {getAllImgs} from "./fetchApi.js"
+import {getFetch} from "./fetchApi.js"
 
 import { renderCurrentImgAndValue } from "./render.js";
 
@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const renderSetting = (nav_item = "Device") => {
+  const renderSetting = (nav_item = "Preferences") => {
     let bars = shortcuts.map(
       (nav, i) =>
         `             
@@ -297,7 +297,6 @@ document.addEventListener("DOMContentLoaded", () => {
     modal_sett__contr.innerHTML = controll_remote.join("");
   };
 
-  renderSetting();
 
   //   zoomImg()
 
@@ -328,11 +327,15 @@ document.addEventListener("DOMContentLoaded", () => {
       container.classList.add("show");
       dataCallApi = data;
       renderCurrentImgAndValue(currentIndex, data);
+    renderSetting();
+
     })
     .catch((err) => {
       loading.innerText = "loading.....";
       console.log("err : ", err);
     });
+
+    getFetch().then(data => console.log(data))
 
   // console.log(arr);
 });

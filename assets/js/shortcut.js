@@ -26,13 +26,13 @@
                                     <div class="contr__item_remote">
                                         <div class="remote__child">
                                             ${
-                                                item.items.map((e, i)=>(
+                                                item.items.forEach((e, i)=>(
                                                     `
                                                         <div class="child" data-index=${i}>
                                                             <div class="child__name">
                                                                 ${e.name_item}                                                            </div>
                                                             <div class="child__shortcut_btns">
-                                                                <div class = "shortcut_names">${e.keyCodeName} </div>                                               
+                                                                <div class = "shortcut_names">${e.keyCodeName}</div>                                               
                                                             </div>
                                                             <div class="child__icon">
                                                                 <i class="fa-solid fa-pen"></i>

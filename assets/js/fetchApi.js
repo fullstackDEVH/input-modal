@@ -1,37 +1,34 @@
 let url = "https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs";
 
-export let getAllImgs = () => {
+export let getFetch = () => {
   try {
-    let arrData = [];
-
-    fetch(url, {
+    let promise = fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json",
       },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        return data
-      })
-    
-      
+    }).then((res) => {
+      return new Promise((resol, reject) => {
+        resol(res.json());
+      });
+    });
+
+    return promise;
   } catch (error) {
     alert("error fetch api  ", error.message);
   }
 };
 
-
 // Define a function to fetch the images in batches
 function fetchImagesInBatches(batchSize) {
   // Make a single API request to fetch all the image links
-  fetch('https://example.com/images')
-    .then(response => response.json())
-    .then(data => {
+  fetch("url")
+    .then((response) => response.json())
+    .then((data) => {
       // Divide the image links into batches
       const batches = [];
       let batch = [];
-      data.forEach(link => {
+      data.forEach((link) => {
         batch.push(link);
         if (batch.length === batchSize) {
           batches.push(batch);
@@ -43,19 +40,19 @@ function fetchImagesInBatches(batchSize) {
       }
 
       // Process each batch of image links
-      batches.forEach(batch => {
+      batches.forEach((batch) => {
         // Create an array to hold the promises for each image
         const promises = [];
 
         // Loop through the batch and create a promise for each image
-        batch.forEach(link => {
+        batch.forEach((link) => {
           // Create an Image object and set the src attribute to the link
           const img = new Image();
           img.src = link;
 
           // Add the promise for the image to the promises array
           promises.push(
-            new Promise(resolve => {
+            new Promise((resolve) => {
               img.onload = () => resolve();
             })
           );
@@ -70,4 +67,4 @@ function fetchImagesInBatches(batchSize) {
 }
 
 // Call the fetchImagesInBatches function with a batch size of 10
-fetchImagesInBatches(10);
+// fetchImagesInBatches(10);

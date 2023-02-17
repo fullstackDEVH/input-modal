@@ -8,11 +8,13 @@ export const shortcutSettingData = [
                 name_item : 'Language',
                 keyCodeName : "alt + l",
                 keyCode : 190,
+                keys : ["alt", "l"]
             },
             {
                 name_item : 'indentation',
                 keyCodeName : "alt + i",
                 keyCode : 190,
+                keys : ["alt", "i"]
             }
         ]
     },
@@ -22,7 +24,8 @@ export const shortcutSettingData = [
             {
                 name_item : 'random',
                 keyCodeName : "alt + <",
-                keyCode : 188
+                keyCode : 188,
+                keys : ["alt", "r"]
             
             }
         ]
@@ -34,19 +37,20 @@ export const shortcutSettingData = [
                 name_item : 'next',
                 keyCodeName : "alt + enter",
                 keyCode : 13,
+                keys : ["alt", "e"]
                
             },
             {
                 name_item : 'previous',
                 keyCodeName : "alt + z",
                 keyCode : 90,
-                
+                keys : ["alt", "l"]
             },
             {
                 name_item : 'submit',
                 keyCodeName : "alt + q",
                 keyCode : 81,
-                
+                keys : ["alt", "t"]
             }
         ]
     },

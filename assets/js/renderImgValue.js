@@ -15,7 +15,6 @@ const btn_setting = $("#btn-setting");
 const loading = $(".container-loader");
 
 export const renderCurrentImgAndValue = (index, dataCall) => {
-  console.log(dataCall);
   loading.classList.add("show");
   new Promise((resolve) => {
     img.src = dataCall[index]?.urlImg || "";

@@ -1,5 +1,9 @@
 import api, { shortcutSettingData } from "../constant/api.js";
-import { checkLocalStorageIsAvaiable } from "./localStorage.js";
+import {
+  checkLocalStorageIsAvaiable,
+  name_setting,
+  setCustomSettingLocalStorage,
+} from "./localStorage.js";
 import { getFetch } from "./fetchApi.js";
 import { renderSettingAPI } from "./renderShortcut.js";
 import { renderCurrentImgAndValue } from "./renderImgValue.js";
@@ -32,8 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
     isEdit: false,
     index: null,
   };
-  let dataCallApi = [];
   let isModal = false;
+
+  let dataCallApi = [];
+  let dataSetting = [];
 
   // btn next click
   btn_next.onclick = () => {
@@ -84,7 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.classList.add("show");
     isModal = true;
     // render modal
-    renderSettingAPI("Preferences", shortcutSettingData);
+    dataSetting = checkLocalStorageIsAvaiable(name_setting);
+    // console.log(dataSetting);
+    renderSettingAPI("Shortcut", dataSetting);
   };
 
   inputText.oninput = (e) => {
@@ -109,9 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // press keyboard
   document.onkeydown = (e) => {
-    let codeNext = shortcutSettingData[2].items[0].keyCode;
-    let codePre = shortcutSettingData[2].items[1].keyCode;
-    let codeSubmit = shortcutSettingData[2].items[2].keyCode;
+    let codeNext = dataSetting[2].items[0].keyCode;
+    let codePre = dataSetting[2].items[1].keyCode;
+    let codeSubmit = dataSetting[2].items[2].keyCode;
 
     // console.log("so sánh với key được lưu trong bars");
     if (!isModal) {
@@ -165,14 +173,9 @@ document.addEventListener("DOMContentLoaded", () => {
         handleSubmit();
       }
     } else {
-      if (isEditShortCut.isEdit) {
-        inputEdit = e.key;
-        codeKeyEdit = e.keyCode;
-      }
     }
   };
-
-  // handle modal
+  // handle modal setting
 
   const modal = $(".modal");
   const modal_sett = $(".modal_sett");
@@ -181,10 +184,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   modal_sett.onclick = (e) => {
     // select navbar setting
+
     if (e.target.closest(".bar_item")) {
       renderSettingAPI(
         e.target.closest(".bar_item").getAttribute("data-nav"),
-        shortcutSettingData
+        dataSetting
       );
     }
 
@@ -194,8 +198,38 @@ document.addEventListener("DOMContentLoaded", () => {
       isModal = false;
     }
 
-    // click
+    // click icon edit
     if (e.target.closest(".child__icon:not(.child__icon.save)")) {
+      let indexSettingItem =
+        $(".bar_item.active").getAttribute("data-nav-index");
+      let indexParentNodeIconClick = e.target
+        .closest(".child__icon:not(.child__icon.save)")
+        .parentNode.getAttribute("data-index");
+
+      // console.log( $$(`.input-${indexSettingItem}-${indexParentNodeIconClick}`));
+
+      // handle subsetting input
+
+      let inputtsss = $$(
+        `.input-${indexSettingItem}-${indexParentNodeIconClick}`
+      );
+
+      inputtsss.forEach((input, possition) => {
+        input.onclick = () => {
+          input.onkeydown = (k) => {
+            inputtsss[possition].value = k.key;
+          };
+        };
+      });
+
+      /*$$(`.input-${indexSettingItem}-${indexParentNodeIconClick}`)[0].onclick = (v) => {
+        v.target.onkeydown = (k) => {
+          console.log(k.key);
+          v.target.value = k.key;
+        }
+        
+      }*/
+
       isEditShortCut.isEdit = true;
       inputEdit = "";
 
@@ -203,13 +237,16 @@ document.addEventListener("DOMContentLoaded", () => {
         e.classList.remove("edit");
       });
 
+      // $$(".child__icon").forEach((e) => {
+      //   if (e.classList.contains("save")) {
+      //     e.innerHTML = `<i class="fa-solid fa-pen"></i>`;
+      //   }
+      // });
+
       $$(".child__icon").forEach((e) => {
         if (e.classList.contains("save")) {
           e.innerHTML = `<i class="fa-solid fa-pen"></i>`;
         }
-      });
-
-      $$(".child__icon").forEach((e) => {
         e.classList.remove("save");
       });
       e.target.closest(".child__icon").parentElement.classList.add("edit");
@@ -222,8 +259,8 @@ document.addEventListener("DOMContentLoaded", () => {
       inputEdit = "";
     }
 
-    // save shortcut
-    if (e.target.closest(".child.edit")) {
+    // click icon save
+    if (e.target.closest(".child__icon.save")) {
       let nav_shortcut_name = $(".contr__item").getAttribute(
         "data-nav-shortcut-name"
       );
@@ -242,26 +279,38 @@ document.addEventListener("DOMContentLoaded", () => {
       // khi save nếu có hơn 2 ký tự thì dừng
 
       isEditShortCut.isEdit = false;
-      shortcutSettingData[nav_shortcut_index].items[indexRemote].keyCodeName =
+      dataSetting[nav_shortcut_index].items[indexRemote].keyCodeName =
         "alt + " + inputEdit.toLowerCase();
-      shortcutSettingData[nav_shortcut_index].items[indexRemote].keyCode =
-        codeKeyEdit;
+      dataSetting[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
 
-      renderSettingAPI(nav_shortcut_name, shortcutSettingData);
+      let input_stress = $$(
+        `.input-${indexSettingItem}-${indexParentNodeIconClick}`
+      );
+
+      dataSetting[nav_shortcut_index].items[indexRemote].keys[0] =
+        input_stress[0].value;
+      dataSetting[nav_shortcut_index].items[indexRemote].keys[1] =
+        input_stress[1].value;
+
+      setCustomSettingLocalStorage(name_setting, dataSetting);
+      renderSettingAPI(nav_shortcut_name, dataSetting);
 
       inputEdit = "";
     }
   };
 
+  // handle then call api
   loading.classList.add("show");
 
-  getFetch("https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs").then((data) => {
-    // loading.innerText = "";
-    container.classList.add("show");
-    loading.classList.remove("show");
+  getFetch("https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs").then(
+    (data) => {
+      container.classList.add("show");
+      loading.classList.remove("show");
+      dataCallApi = data;
+      renderSettingAPI("Preferences", dataSetting);
+      renderCurrentImgAndValue(currentIndex, dataCallApi);
+    }
+  );
 
-    dataCallApi = data;
-    renderCurrentImgAndValue(currentIndex, dataCallApi);
-    renderSettingAPI("Preferences", shortcutSettingData);
-  });
+  dataSetting = checkLocalStorageIsAvaiable(name_setting);
 });

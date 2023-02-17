@@ -1,5 +1,7 @@
 import { shortcutSettingData } from "../constant/api.js";
 
+export const name_setting = "user-setting";
+
 export const setCustomSettingLocalStorage = (
   name_localStore_set,
   dataSetting
@@ -8,8 +10,14 @@ export const setCustomSettingLocalStorage = (
 };
 
 export const getCustomSettingLocalStorage = (name_localStore_get) => {
-  let shortcuts = JSON.parse(window.localStorage.getItem(name_localStore_get));
-  return shortcuts;
+  try {
+    return JSON.parse(window.localStorage.getItem(name_localStore_get));
+  } catch (error) {
+    alert(
+      "There's something wrong your setting, so we will reset them to default !!"
+    );
+    return checkLocalStorageIsAvaiable(name_setting);
+  }
 };
 
 export const removeCustomSettingLocalStorage = (name_localStore_remove) => {
@@ -17,9 +25,9 @@ export const removeCustomSettingLocalStorage = (name_localStore_remove) => {
 };
 
 export const checkLocalStorageIsAvaiable = (name_store_check) => {
-  const isShortCut = getCustomSettingLocalStorage(name_store_check);
-  if (!isShortCut) {
+  if (!getCustomSettingLocalStorage(name_store_check)) {
     setCustomSettingLocalStorage(name_store_check, shortcutSettingData);
   }
-  return isShortCut;
+
+  return getCustomSettingLocalStorage(name_store_check);
 };

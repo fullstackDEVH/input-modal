@@ -120,8 +120,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let codeNext = dataSetting[2].items[0].keyCode;
     let codePre = dataSetting[2].items[1].keyCode;
     let codeSubmit = dataSetting[2].items[2].keyCode;
-
+    
     // console.log("so sánh với key được lưu trong bars");
+
     if (!isModal) {
       // shortcut next press
       if (
@@ -179,8 +180,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const modal = $(".modal");
   const modal_sett = $(".modal_sett");
-  const modal_sett__bar_contain = $(".modal_sett__bar_contain");
-  const modal_sett__contr = $(".modal_sett__contr");
+  // const modal_sett__bar_contain = $(".modal_sett__bar_contain");
+  // const modal_sett__contr = $(".modal_sett__contr");
 
   modal_sett.onclick = (e) => {
     // select navbar setting
@@ -198,17 +199,13 @@ document.addEventListener("DOMContentLoaded", () => {
       isModal = false;
     }
 
-    // click icon edit
+    // click icon edit two input
     if (e.target.closest(".child__icon:not(.child__icon.save)")) {
       let indexSettingItem =
         $(".bar_item.active").getAttribute("data-nav-index");
       let indexParentNodeIconClick = e.target
         .closest(".child__icon:not(.child__icon.save)")
         .parentNode.getAttribute("data-index");
-
-      // console.log( $$(`.input-${indexSettingItem}-${indexParentNodeIconClick}`));
-
-      // handle subsetting input
 
       let inputtsss = $$(
         `.input-${indexSettingItem}-${indexParentNodeIconClick}`
@@ -217,7 +214,13 @@ document.addEventListener("DOMContentLoaded", () => {
       inputtsss.forEach((input, possition) => {
         input.onclick = () => {
           input.onkeydown = (k) => {
-            inputtsss[possition].value = k.key;
+            let valueInput = k.key;
+            let CodeInput = k.keyCode;
+            if (k.keyCode === 32) {
+              valueInput = "Space";
+            }
+            inputtsss[possition].value = valueInput;
+            inputtsss[possition].setAttribute("data-input-code", CodeInput);
           };
         };
       });
@@ -269,28 +272,38 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       let indexRemote = e.target.closest(".child").getAttribute("data-index");
 
-      if (inputEdit.length < 1) {
-        renderSettingAPI(nav_shortcut_name, shortcutSettingData);
-        return;
-      }
-      if (e.target.closest("#cars")) {
-        console.log(e.target.closest("#cars").value);
-      }
+      // if (inputEdit.length < 1) {
+      //   renderSettingAPI(nav_shortcut_name, shortcutSettingData);
+      //   return;
+      // }
+
+      
+      // if (e.target.closest("#cars")) {
+      //   console.log(e.target.closest("#cars").value);
+      // }
       // khi save nếu có hơn 2 ký tự thì dừng
 
       isEditShortCut.isEdit = false;
-      dataSetting[nav_shortcut_index].items[indexRemote].keyCodeName =
-        "alt + " + inputEdit.toLowerCase();
-      dataSetting[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
+      // dataSetting[nav_shortcut_index].items[indexRemote].keyCodeName =
+      //   "alt + " + inputEdit.toLowerCase();
+      // dataSetting[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
 
       let input_stress = $$(
-        `.input-${indexSettingItem}-${indexParentNodeIconClick}`
+        `.input-${nav_shortcut_index}-${indexRemote}`
       );
 
+      // code key down
       dataSetting[nav_shortcut_index].items[indexRemote].keys[0] =
         input_stress[0].value;
+
+      dataSetting[nav_shortcut_index].items[indexRemote].keysCode[0] =
+        input_stress[0].getAttribute("data-input-code");
+      // value key down
       dataSetting[nav_shortcut_index].items[indexRemote].keys[1] =
         input_stress[1].value;
+
+      dataSetting[nav_shortcut_index].items[indexRemote].keysCode[1] =
+        input_stress[1].getAttribute("data-input-code");
 
       setCustomSettingLocalStorage(name_setting, dataSetting);
       renderSettingAPI(nav_shortcut_name, dataSetting);

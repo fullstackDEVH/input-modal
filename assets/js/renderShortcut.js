@@ -3,10 +3,11 @@ const $$ = document.querySelectorAll.bind(document);
 const modal_sett__bar_contain = $(".modal_sett__bar_contain");
 const modal_sett__contr = $(".modal_sett__contr");
 
-export const renderSettingAPI = (nav_item = "Preferences",settingCustomApi) => {
+export const renderSettingAPI = (
+  nav_item = "Preferences",
+  settingCustomApi
+) => {
   // <div class = "shortcut_names">${e.keyCodeName} </div>
-
-  console.log("settingCustomApi : ", settingCustomApi);
 
   // có hai đối số cần truyền để
   let nav_settings = settingCustomApi.map(
@@ -39,9 +40,10 @@ export const renderSettingAPI = (nav_item = "Preferences",settingCustomApi) => {
                           
                                                   <div class="contr__item_remote">
                                                       <div class="remote__child">
-                                                          ${item.items.map(
-                                                            (e, i) =>
-                                                              `
+                                                          ${item.items
+                                                            .map(
+                                                              (e, i) =>
+                                                                `
                                                                       <div class="child" data-index=${i}>
                                                                           <div class="child__name">
                                                                               ${
@@ -49,22 +51,27 @@ export const renderSettingAPI = (nav_item = "Preferences",settingCustomApi) => {
                                                                               }
                                                                           </div>
                                                                           <div class="child__shortcut_btns">
-                                                                              ${e.keys.map(
-                                                                                (
-                                                                                  inputV,
-                                                                                  inputIndex
-                                                                                ) =>
-                                                                                  `
+                                                                              ${e.keys
+                                                                                .map(
+                                                                                  (
+                                                                                    inputV,
+                                                                                    inputIndex
+                                                                                  ) =>
+                                                                                    `
                                                                                   <input class="input-${ind}-${i}" type="text" readonly="true" value="${inputV}" /> 
                                                                                   `
-                                                                              )}
+                                                                                )
+                                                                                .join(
+                                                                                  ""
+                                                                                )}
                                                                           </div>
                                                                           <div class="child__icon">
                                                                               <i class="fa-solid fa-pen"></i>
                                                                           </div>
                                                                       </div>
                                                               `
-                                                          )}
+                                                            )
+                                                            .join("")}
                                                       </div>
                                                   </div>
                           
@@ -77,7 +84,6 @@ export const renderSettingAPI = (nav_item = "Preferences",settingCustomApi) => {
                               
                           `
   );
-  modal_sett__bar_contain.innerHTML = nav_settings.join(""); 
+  modal_sett__bar_contain.innerHTML = nav_settings.join("");
   modal_sett__contr.innerHTML = sub_nav_setting.join("");
-  console.log(sub_nav_setting)
 };

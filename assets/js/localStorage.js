@@ -31,3 +31,4 @@ export const checkLocalStorageIsAvaiable = (name_store_check) => {
 
   return getCustomSettingLocalStorage(name_store_check);
 };
+

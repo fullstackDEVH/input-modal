@@ -9,6 +9,7 @@ export const renderSettingAPI = (
 ) => {
   // <div class = "shortcut_names">${e.keyCodeName} </div>
 
+//  border color cho input khi press edit button
   // có hai đối số cần truyền để
   let nav_settings = settingCustomApi.map(
     (nav, i) =>
@@ -58,7 +59,7 @@ export const renderSettingAPI = (
                                                                                     inputIndex
                                                                                   ) =>
                                                                                     `
-                                                                                  <input class="input-${ind}-${i}" type="text" readonly="true" value="${inputV}" /> 
+                                                                                  <input class="input-${ind}-${i}" type="text" readonly="true" value="${inputV}" data-input-code="${e.keysCode[inputIndex]}" /> 
                                                                                   `
                                                                                 )
                                                                                 .join(

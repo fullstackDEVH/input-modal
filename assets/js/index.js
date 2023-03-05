@@ -26,11 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputText = $(".popup-right-input #text");
   const loading = $(".container-loader");
 
-  // define constant
-  let isFetch = false;
-
   let inputEdit = "";
-  let codeKeyEdit = 0;
+
+  // define constant
   let currentIndex = 0;
   let isEditShortCut = {
     isEdit: false,
@@ -38,8 +36,21 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   let isModal = false;
 
+  // data image and value
   let dataCallApi = [];
+  // data setting
   let dataSetting = [];
+
+
+  const handleClickChangeImgAndValue = (indexValueChange) => {
+    dataCallApi[currentIndex].value = inputText.value;
+
+    console.log(dataCallApi[currentIndex].value);
+    currentIndex = +indexValueChange + currentIndex;
+    renderCurrentImgAndValue(currentIndex, dataCallApi);
+  };
+
+
 
   // btn next click
   btn_next.onclick = () => {
@@ -48,27 +59,23 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("please entered for input");
         return;
       }
-      currentIndex++;
+ 
+      handleClickChangeImgAndValue(1);
 
-      if (Math.floor(dataCallApi.length / 10) === currentIndex) {
+      // push array when 60 90 percentay
+      /*if (Math.floor(dataCallApi.length / 10) === currentIndex) {
         getFetch(url).then((data) => {
           dataCallApi = [...dataCallApi, ...data];
           renderCurrentImgAndValue(currentIndex, dataCallApi);
         });
-      }
-
-      if (currentIndex === 3) {
-        dataCallApi = [...dataCallApi];
-      }
-      renderCurrentImgAndValue(currentIndex, dataCallApi);
+      }*/
     }
   };
 
   // btn previous click
   btn_pre.onclick = (e) => {
     if (currentIndex > 0) {
-      currentIndex--;
-      renderCurrentImgAndValue(currentIndex, dataCallApi);
+      handleClickChangeImgAndValue(-1);
     } else {
       alert("đây là vị trí đầu tiên! Cann't back.");
     }
@@ -109,21 +116,86 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const handleClickChangeImgAndValue = (indexValueChange) => {
-    dataCallApi[currentIndex].value = inputText.value;
-    currentIndex = +indexValueChange + currentIndex;
-    renderCurrentImgAndValue(currentIndex, dataCallApi);
+  let ondownCodes= [];
+
+  const handleShortcut = (arrShortcutCodes, arrOnDownCodes) => {
+    if(arrShortcutCodes[0] === arrOnDownCodes[0] && arrShortcutCodes[1] === arrOnDownCodes[1] ){
+      console.log("match");
+
+       // check nextCodes[1] empty
+
+
+        /*if(nextCodes[1].length < 1) {
+          // dùng 1 nút
+
+        }*/
+    }
   };
+  
 
   // press keyboard
   document.onkeydown = (e) => {
-    let codeNext = dataSetting[2].items[0].keyCode;
-    let codePre = dataSetting[2].items[1].keyCode;
-    let codeSubmit = dataSetting[2].items[2].keyCode;
+
+    ondownCodes.push(e.keyCode);
+    if (ondownCodes.length > 2) {
+      ondownCodes.shift();
+    }
     
+    let t;
+    clearTimeout(t);
+
+    t = setTimeout(() => {
+      ondownCodes = [];
+    }, 700);
+
+    let nextCodes = [
+      dataSetting[2].items[0].keysCode[0],
+      dataSetting[2].items[0].keysCode[1],
+    ];
+
+    let preCodes = [
+      dataSetting[2].items[1].keysCode[0],
+      dataSetting[2].items[1].keysCode[1],
+    ];
+
+    let codePre = dataSetting[2].items[1].keysCode;
+    let codeSubmit = dataSetting[2].items[2].keysCode;
+
+    /*if (nextCodes.sort().join(",") === ondown.sort().join(",")) {
+      console.log("Yes");
+    } else console.log("no");*/
+
     // console.log("so sánh với key được lưu trong bars");
 
-    if (!isModal) {
+
+    if(!isModal) {
+      // shortcut next
+      handleShortcut(dataSetting[2].items[0].keysCode, ondownCodes);
+     
+      if(+nextCodes[0] === ondownCodes[0] && +nextCodes[1] === ondownCodes[1] ){
+        if (!inputText.value) {
+          alert("please entered ");
+          inputText.focus();  
+          return;
+        }
+
+        handleClickChangeImgAndValue(1);
+
+      }
+
+      // shortcut previous
+      if (preCodes[0] === ondown[0] && preCodes[1] === ondown[1] ) {
+        if (currentIndex < 1) {
+          alert("cannot back ");
+          inputText.focus();
+          return;
+        }
+        handleClickChangeImgAndValue(-1);
+      }
+
+    }
+
+  /*  if (!isModal) {
       // shortcut next press
       if (
         e.altKey &&
@@ -173,9 +245,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         handleSubmit();
       }
-    } else {
-    }
+    }*/
+ 
   };
+
+
   // handle modal setting
 
   const modal = $(".modal");
@@ -277,7 +351,6 @@ document.addEventListener("DOMContentLoaded", () => {
       //   return;
       // }
 
-      
       // if (e.target.closest("#cars")) {
       //   console.log(e.target.closest("#cars").value);
       // }
@@ -288,9 +361,19 @@ document.addEventListener("DOMContentLoaded", () => {
       //   "alt + " + inputEdit.toLowerCase();
       // dataSetting[nav_shortcut_index].items[indexRemote].keyCode = codeKeyEdit;
 
-      let input_stress = $$(
-        `.input-${nav_shortcut_index}-${indexRemote}`
-      );
+      let input_stress = $$(`.input-${nav_shortcut_index}-${indexRemote}`);
+
+      // check input[0] 
+        if(input_stress[0].value === "Backspace") {
+          alert("first possition cannot be left blank!!")
+          console.log(dataSetting[nav_shortcut_index].items[indexRemote].keysCode[0]);
+          input_stress[0].value = dataSetting[nav_shortcut_index].items[indexRemote].keysCode[0];
+          return;
+        }
+
+      // cannot using key ctrl for key[0]
+
+
 
       // code key down
       dataSetting[nav_shortcut_index].items[indexRemote].keys[0] =
@@ -313,9 +396,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // handle then call api
+  // call api get links imgs
   loading.classList.add("show");
 
-  getFetch("https://63ec999932a08117239df65b.mockapi.io/api/v1/imgs").then(
+  getFetch("https://63ec999932a08117239df65b.mockapi.io/api/v1/imgage").then(
     (data) => {
       container.classList.add("show");
       loading.classList.remove("show");

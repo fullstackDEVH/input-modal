@@ -10,12 +10,16 @@ const img_container = $(".popup-left-img");
 
 const btn_next = $("#btn-next");
 const btn_pre = $("#btn-previos");
-const btn_submit = $("#btn-submit");
-const btn_setting = $("#btn-setting");
 const loading = $(".container-loader");
 
 export const renderCurrentImgAndValue = (index, dataCall) => {
+
+  console.log(index);
+  btn_next.disabled = true;
+  btn_pre.disabled = true;
+
   loading.classList.add("show");
+
   new Promise((resolve) => {
     img.src = dataCall[index]?.urlImg || "";
 
@@ -23,6 +27,11 @@ export const renderCurrentImgAndValue = (index, dataCall) => {
       resolve();
     };
   }).then(() => {
+    btn_next.disabled = false;
+    btn_pre.disabled = false;
+
+
+
     loading.classList.remove("show");
     aspectRatioImg(img, img_container);
     inputText.value = dataCall[index].value;

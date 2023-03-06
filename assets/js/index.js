@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const handleClickChangeImgAndValue = (indexValueChange) => {
     dataCallApi[currentIndex].value = inputText.value;
 
-    console.log(dataCallApi[currentIndex].value);
     currentIndex = +indexValueChange + currentIndex;
     renderCurrentImgAndValue(currentIndex, dataCallApi);
   };
@@ -146,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     t = setTimeout(() => {
       ondownCodes = [];
-    }, 700);
+    }, 1000);
 
     let nextCodes = [
       dataSetting[2].items[0].keysCode[0],
@@ -158,9 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dataSetting[2].items[1].keysCode[1],
     ];
 
-    let codePre = dataSetting[2].items[1].keysCode;
-    let codeSubmit = dataSetting[2].items[2].keysCode;
-
+   
     /*if (nextCodes.sort().join(",") === ondown.sort().join(",")) {
       console.log("Yes");
     } else console.log("no");*/
@@ -172,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // shortcut next
       handleShortcut(dataSetting[2].items[0].keysCode, ondownCodes);
      
-      if(+nextCodes[0] === ondownCodes[0] && +nextCodes[1] === ondownCodes[1] ){
+      if(+nextCodes[0] === ondownCodes[ ondownCodes.length -2 ] && +nextCodes[1] === ondownCodes[ ondownCodes.length - 1 ] ){
         if (!inputText.value) {
           alert("please entered ");
           inputText.focus();  
@@ -184,7 +181,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // shortcut previous
+
+      console.log("preCodes : ", preCodes);
+      console.log("ondownCodes : ", ondownCodes);
       if (preCodes[0] === ondownCodes[0] && preCodes[1] === ondownCodes[1] ) {
+        console.log("pre");
         if (currentIndex < 1) {
           alert("cannot back ");
           inputText.focus();
@@ -195,7 +196,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-  /*  if (!isModal) {
+  /*  
+     let codePre = dataSetting[2].items[1].keysCode;
+    let codeSubmit = dataSetting[2].items[2].keysCode;
+
+  if (!isModal) {
       // shortcut next press
       if (
         e.altKey &&

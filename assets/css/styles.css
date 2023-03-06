@@ -308,13 +308,12 @@ body {
   outline: none;
 }
 
-.child.edit input:is(.active) {
+.child.edit input {
   border: 1px solid grey;
-  outline: 2px solid #3498db;
 
 }
 
-.child.edit input:active {
+.child.edit input.active {
   outline: 2px solid #3498db;
 }
 

@@ -258,8 +258,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // const modal_sett__contr = $(".modal_sett__contr");
 
   modal_sett.onclick = (e) => {
+    
     // select navbar setting
-
     if (e.target.closest(".bar_item")) {
       renderSettingAPI(
         e.target.closest(".bar_item").getAttribute("data-nav"),
@@ -286,13 +286,25 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       inputtsss.forEach((input, possition) => {
+        input.classList.remove('active');
+
         input.onclick = () => {
+          possition === 0 ? inputtsss[1].classList.remove('active') : inputtsss[0].classList.remove('active');
+          inputtsss[possition].classList.add('active');
+
+          // set value to input
           input.onkeydown = (k) => {
             let valueInput = k.key;
             let CodeInput = k.keyCode;
+
+            if (k.keyCode === 17) {
+              return alert("ctrl button should not be used as a shortcut !!")
+            };
+
             if (k.keyCode === 32) {
               valueInput = "Space";
-            }
+            };
+
             inputtsss[possition].value = valueInput;
             inputtsss[possition].setAttribute("data-input-code", CodeInput);
           };

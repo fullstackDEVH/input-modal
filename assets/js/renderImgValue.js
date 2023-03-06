@@ -14,7 +14,6 @@ const loading = $(".container-loader");
 
 export const renderCurrentImgAndValue = (index, dataCall) => {
 
-  console.log(index);
   btn_next.disabled = true;
   btn_pre.disabled = true;
 

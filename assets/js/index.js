@@ -184,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // shortcut previous
-      if (preCodes[0] === ondown[0] && preCodes[1] === ondown[1] ) {
+      if (preCodes[0] === ondownCodes[0] && preCodes[1] === ondownCodes[1] ) {
         if (currentIndex < 1) {
           alert("cannot back ");
           inputText.focus();

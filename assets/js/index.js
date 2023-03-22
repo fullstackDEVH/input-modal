@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let ondownCodes= [];
 
   const handleShortcut = (arrShortcutCodes, arrOnDownCodes) => {
-    if(arrShortcutCodes[0] === arrOnDownCodes[0] && arrShortcutCodes[1] === arrOnDownCodes[1] ){
+    if(arrShortcutCodes[0] === arrOnDownCodes[ arrOnDownCodes.length - 2 ] && arrShortcutCodes[1] === arrOnDownCodes[ arrOnDownCodes.length - 1 ] ){
       console.log("match");
 
        // check nextCodes[1] empty
@@ -131,7 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
   
-
   // press keyboard
   document.onkeydown = (e) => {
 
@@ -157,14 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
       dataSetting[2].items[1].keysCode[1],
     ];
 
-   
-    /*if (nextCodes.sort().join(",") === ondown.sort().join(",")) {
-      console.log("Yes");
-    } else console.log("no");*/
-
-    // console.log("so sánh với key được lưu trong bars");
-
-
     if(!isModal) {
       // shortcut next
       handleShortcut(dataSetting[2].items[0].keysCode, ondownCodes);
@@ -175,15 +166,10 @@ document.addEventListener("DOMContentLoaded", () => {
           inputText.focus();  
           return;
         }
-
         handleClickChangeImgAndValue(1);
-
-      }
+      };
 
       // shortcut previous
-
-      console.log("preCodes : ", preCodes);
-      console.log("ondownCodes : ", ondownCodes);
       if (preCodes[0] === ondownCodes[0] && preCodes[1] === ondownCodes[1] ) {
         console.log("pre");
         if (currentIndex < 1) {
@@ -192,9 +178,9 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
         handleClickChangeImgAndValue(-1);
-      }
+      };
 
-    }
+    };
 
   /*  
      let codePre = dataSetting[2].items[1].keysCode;
@@ -427,4 +413,27 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   dataSetting = checkLocalStorageIsAvaiable(name_setting);
+
+  const data = async () => {
+    try {
+      const res = await fetch("http://113.160.226.174:50003/api/auth/login", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({ username: "huy", password: "huy20052001" }),
+      });
+
+      const data = await res.json();
+
+      console.log("data : ",data);
+
+    } catch (error) {
+      console.log("error : ", error );
+    }
+  };
+
+  data();
 });

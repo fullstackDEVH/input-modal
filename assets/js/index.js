@@ -400,7 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   
 
-   fetch("http://113.160.226.174:50003/api/auth/login", {
+   fetch("http://113.160.226.174:50003/api/auth/login/", {
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",

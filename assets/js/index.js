@@ -412,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
   .then(data => {
     console.log("data : ", data);
   })
-
+  console.log("test");
   // handle then call api
   // call api get links imgs
   loading.classList.add("show");

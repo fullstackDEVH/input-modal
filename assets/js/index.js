@@ -398,6 +398,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  
+
+   fetch("http://113.160.226.174:50003/api/auth/login", {
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    // credentials: "include",
+    body: JSON.stringify({ username: "huy", password: "huy20052001" }),
+  }).then(res => res.json())
+  .then(data => {
+    console.log("data : ", data);
+  })
+
   // handle then call api
   // call api get links imgs
   loading.classList.add("show");
@@ -414,26 +429,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   dataSetting = checkLocalStorageIsAvaiable(name_setting);
 
-  const data = async () => {
-    try {
-      const res = await fetch("http://113.160.226.174:50003/api/auth/login", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({ username: "huy", password: "huy20052001" }),
-      });
 
-      const data = await res.json();
-
-      console.log("data : ",data);
-
-    } catch (error) {
-      console.log("error : ", error );
-    }
-  };
-
-  data();
 });

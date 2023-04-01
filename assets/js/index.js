@@ -1,4 +1,4 @@
-import api, { shortcutSettingData } from "../constant/api.js";
+
 import {
   checkLocalStorageIsAvaiable,
   name_setting,
@@ -147,18 +147,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
 
     let nextCodes = [
-      dataSetting[2].items[0].keysCode[0],
-      dataSetting[2].items[0].keysCode[1],
+      dataSetting[0].items[0].keysCode[0],
+      dataSetting[0].items[0].keysCode[1],
     ];
 
     let preCodes = [
-      dataSetting[2].items[1].keysCode[0],
-      dataSetting[2].items[1].keysCode[1],
+      dataSetting[0].items[1].keysCode[0],
+      dataSetting[0].items[1].keysCode[1],
     ];
 
     if(!isModal) {
       // shortcut next
-      handleShortcut(dataSetting[2].items[0].keysCode, ondownCodes);
+      // handleShortcut(dataSetting[0].items[0].keysCode, ondownCodes);
      
       if(+nextCodes[0] === ondownCodes[ ondownCodes.length -2 ] && +nextCodes[1] === ondownCodes[ ondownCodes.length - 1 ] ){
         if (!inputText.value) {
@@ -398,23 +398,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  
-
-   fetch("http://113.160.226.174:50003/api/auth/login/", {
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    // credentials: "include",
-    body: JSON.stringify({ username: "huy", password: "huy20052001" }),
-  }).then(res => res.json())
-  .then(data => {
-    console.log("data : ", data);
-  })
-  console.log("test");
-  // handle then call api
-  // call api get links imgs
   loading.classList.add("show");
 
   getFetch("https://63ec999932a08117239df65b.mockapi.io/api/v1/imgage").then(
@@ -428,6 +411,9 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   dataSetting = checkLocalStorageIsAvaiable(name_setting);
+
+
+  
 
 
 });
